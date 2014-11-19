@@ -71,7 +71,7 @@ $nombres = array("Candycane","carbon","carro","ipod","libro","muñeca","oso","pa
  		</div>
  		<div id="alerta">
  			<p class="mensaje">HOLA</p>
-      <p class="contador">3</p>
+      <p class="contador"></p>
  		</div>
  		<div id="controles">
  			<?php
@@ -92,7 +92,7 @@ $nombres = array("Candycane","carbon","carro","ipod","libro","muñeca","oso","pa
         <a data-id="3"><img src="imx/carro.png"></a>
         <a data-id="4"><img src="imx/ipod.png"></a>
         <a data-id="5"><img src="imx/libro.png"></a>
-        <a data-id="6"><img src="imx/muñeca.png"></a>
+        <a data-id="6"><img src="imx/muneca.png"></a>
         <a data-id="7"><img src="imx/oso.png"></a>
         <a data-id="8"><img src="imx/patines.png"></a>
         <a data-id="9"><img src="imx/patineta.png"></a>
@@ -128,7 +128,7 @@ echo "var ordensecreto = '". $mysecret . "';";
 echo "var nombres = '". $mynames . "';";
 
 ?>
-
+ var veces =0;
 ordensecreto = ordensecreto.split(",");
 nombres = nombres.split(",");
 </script>
@@ -136,7 +136,9 @@ nombres = nombres.split(",");
 var estamosen=0; //ESTE ES EL ESTADO ACTUAL DEL CICLO QUE SE VA AUMENTANDO SOLO CUANDO STEP LO PERMITE
 var vidas=5;
 var score=0;
+var nivel=1;
 var limitcont=3;
+var secuencia_boton; // esto es para el nivel 2 en adelante
 jQuery( document ).ready( function( $ ) { 
  
 function cambiatexto(textin) {
@@ -150,7 +152,9 @@ $("#alerta p.mensaje" ).fadeTo( 100 , 0, function() {
 $("#alerta p.contador" ).fadeTo( 100 , 0, function() { 
   $("#alerta p.contador" ).html(numerin);
     $("#alerta p.contador" ).fadeTo( 100 , 1, function() {   });
+   
 } ); 
+
 }//FIN CAMBIA CONTADOR
 
 function setIntervalX(callback, delay, repetitions) {
@@ -167,11 +171,18 @@ function setIntervalX(callback, delay, repetitions) {
 
 
 function contador(limite){
-  var veces = limite;
-alert(limite);
+for (var t = 1; t < 99; t++) // PARA QUITAR LOS INTERVALS QUE HACEN LAS FICHAS Y EVITAR LA FICHA INCHERENTE
+   window.clearInterval(t);
+
+veces = limite;
+//alert(limite);
+
 setIntervalX(function () {
-  veces--;
-  cambiacontador(veces);
+
+  cambiacontador(veces-1);
+  if(veces-1 == 0)
+  error();
+ veces--;
 }, 1000, limite); 
 
 }
@@ -181,7 +192,7 @@ setIntervalX(function () {
 cambiatexto("EN ESTA NAVIDAD MI HERMANA ME REGALO");
 
 setTimeout(function () { step(); }, 1000);
-
+//desdeaqui();
   window.addEventListener("keydown", function(e) {  // ESTE ES EL LISTENER PARA DETECTAR CUANDO SE TECLEA
   	var codigo = e.keyCode; 
   	alert(codigo+" "+estamosen+" "+ordensecreto[(estamosen-1)]);
@@ -203,7 +214,37 @@ setTimeout(function () { step(); }, 1000);
   	else error(); 
   }); 
 
+/**
+function chk
+  Funcion para comparar si el usuario acerto o no, la secuencia de regalos
 
+**/
+
+
+
+/*
+function chk(){
+ switch(nivel){
+  case 1:
+        if(secret==ordensecreto[(estamosen-1)] && codigo!=18 && codigo!=17 && codigo!=9) {  scoring(); step(); } //SI LA TECLA ES IGUAL A LA SERIE, PROCEDEMOS 
+    else error();
+  break;
+
+ case 2:
+ var orden_usuario;
+ var orden_correcto;
+  for (var i = Things.length - 1; i >= 0; i--) {
+    Things[i]
+  };
+    
+  break;
+  case 3:
+  nivel =1;
+  break;
+   
+}
+}
+*/
 function error(){
   if(vidas>0){
     $("#vida"+vidas).addClass("gris");
@@ -221,17 +262,49 @@ function ganador(){
 	$("#puntaje" ).html("GANAAA AAA AAA AA AA ADOR");
 	var contlocura=1; 
 	setInterval(function(){  $("#puntaje" ).removeClass(); $("#puntaje" ).addClass("locura locura"+contlocura); contlocura++; if(contlocura==4) contlocura=1;  }, 100);
+
+/*
+switch(nivel){
+  case 1:
+    nivel++;
+  break;
+ case 2:
+    nivel++;
+  break;
+  case 3:
+  nivel =1;
+  break;
+  
+}
+alert("Pasate al nivel " +nivel);
+*/
 }
 
 
 function scoring(){
-	score++;
+   var addscore = 0;
+	if( veces != 0)
+  addscore = 100 * veces;
+
+
+  score = score + addscore;
+
 	$("#score" ).html(score); 
 }
 
+function desdeaqui(){
+
+for (var i = estamosen; i >= 0 ; i--) {
+    alert("aqui");
+   // ciclon(i);
+}
+
+}
+
+
 function step() {
-  contador(3); 
-	ciclon(estamosen);
+    contador(4); 
+  ciclon(estamosen);
 	estamosen++;
 }
 
